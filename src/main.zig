@@ -10,7 +10,6 @@ pub fn main() !void {
     const stdout_file = std.io.getStdOut().writer();
     var bw = std.io.bufferedWriter(stdout_file);
     const stdout = bw.writer();
-    _ = stdout;
     defer bw.flush() catch {};
 
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -35,7 +34,8 @@ pub fn main() !void {
 
         //var result_day2 = try day2.solve(text, allocator);
         //try stdout.print("Day 2 Result: {d}\tDay 2-2 Result: {d}\n", .{result_day2[0],result_day2[1]});
-        try day3.solve(text, allocator);
+        var result_day3 = try day3.solve(text, allocator);
+        try stdout.print("Day 3 Result: {d}\n", .{result_day3});
     }
 
 }
