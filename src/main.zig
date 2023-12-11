@@ -3,6 +3,7 @@ const day1 = @import("day1.zig");
 const day1_1 = @import("day1_1.zig");
 const day2 = @import("day2.zig");
 const day3 = @import("day3.zig");
+const day4 = @import("day4.zig");
 
 
 pub fn main() !void {
@@ -35,8 +36,11 @@ pub fn main() !void {
         //var result_day2 = try day2.solve(text, allocator);
         //try stdout.print("Day 2 Result: {d}\tDay 2-2 Result: {d}\n", .{result_day2[0],result_day2[1]});
 
-        var result_day3 = try day3.solve(text, allocator);
-        try stdout.print("Day 3 Result: {d}\tDay 3-2 Result: {d}\n", .{result_day3[0],result_day3[1]});
+        //var result_day3 = try day3.solve(text, allocator);
+        //try stdout.print("Day 3 Result: {d}\tDay 3-2 Result: {d}\n", .{result_day3[0],result_day3[1]});
+
+        var result_day4 = try day4.solve(text, allocator);
+        try stdout.print("Day 4 Result: {d}\tDay 4-2 Result: {d}\n", .{result_day4[0],result_day4[1]});
     }
 
 }
