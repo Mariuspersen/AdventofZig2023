@@ -33,13 +33,15 @@ const Symbol = struct {
     }
 };
 
-pub fn solve(text: []u8, allocator: std.mem.Allocator) !usize {
+pub fn solve(text: []u8, allocator: std.mem.Allocator) ![2]usize {
     var partnumbers = std.ArrayList(Partnumber).init(allocator);
     var valid = std.ArrayList(u64).init(allocator);
     var symbols = std.ArrayList(Symbol).init(allocator);
+    var gears = std.ArrayList(usize).init(allocator);
     defer partnumbers.deinit();
     defer valid.deinit();
     defer symbols.deinit();
+    defer gears.deinit();
 
     var lines = std.mem.split(u8, text, "\n");
     var line_count: usize = 0;
@@ -48,17 +50,23 @@ pub fn solve(text: []u8, allocator: std.mem.Allocator) !usize {
     var first_digit_idx: usize = 0;
     var last_digit_idx: usize = 0;
 
+    var sum: usize = 0;
+    var sum_gears: usize = 0;
+
     while (lines.next()) |line| : (line_count += 1) {
         for (line, 0..) |char, idx| {
+
             if (char != '.' and !ascii.isDigit(char)) {
                 try symbols.append(Symbol.init(line_count, idx, char));
             }
+
             if (ascii.isDigit(char)) {
                 if (!reading_digit) {
                     reading_digit = true;
                     first_digit_idx = idx;
                 }
             }
+
             if ((!ascii.isDigit(char) and reading_digit) or (ascii.isDigit(char) and line.len - 1 == idx)) {
                 var offset: usize = if(ascii.isDigit(char) and line.len - 1 == idx) 1 else 0;
                 reading_digit = false;
@@ -67,26 +75,39 @@ pub fn solve(text: []u8, allocator: std.mem.Allocator) !usize {
             }
         }
     }
+
     for (symbols.items) |symbol| {
-        std.debug.print("Symbol: {c} Line: {d} Index: {d}\n", .{symbol.char,symbol.line,symbol.index});
+        var temp_gear = std.ArrayList(usize).init(allocator);
+        defer temp_gear.deinit();
+
         for (symbol.index..symbol.index+2) |x| {
             for (if(symbol.line == 0) 0 else (symbol.line - 1)..(symbol.line+2)) |y| {
                 for (partnumbers.items,0..) |partnumber,i| {
                     if (partnumber.start_index <= x and partnumber.end_index >= x and partnumber.line == y and !partnumber.checked) {
+                        if (symbol.char == '*') {
+                            try temp_gear.append(partnumber.value);
+                        }
+
                         partnumbers.items[i].checked = true;
                         try valid.append(partnumber.value);
-                        std.debug.print("\t{any}\n", .{partnumber});
                     }
                 }
             }
         }
-        std.debug.print("\n\n", .{});
+
+        if (temp_gear.items.len == 2) {
+            try gears.append(temp_gear.items[0] * temp_gear.items[1]);
+        }
+
     }
 
-    var sum: usize = 0;
     for (valid.items) |number| {
         sum = sum + number;
     }
 
-    return sum;
+    for (gears.items) |number| {
+        sum_gears = sum_gears + number;
+    }
+
+    return [2]usize{sum,sum_gears};
 }

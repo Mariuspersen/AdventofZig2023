@@ -34,8 +34,9 @@ pub fn main() !void {
 
         //var result_day2 = try day2.solve(text, allocator);
         //try stdout.print("Day 2 Result: {d}\tDay 2-2 Result: {d}\n", .{result_day2[0],result_day2[1]});
+
         var result_day3 = try day3.solve(text, allocator);
-        try stdout.print("Day 3 Result: {d}\n", .{result_day3});
+        try stdout.print("Day 3 Result: {d}\tDay 3-2 Result: {d}\n", .{result_day3[0],result_day3[1]});
     }
 
 }
